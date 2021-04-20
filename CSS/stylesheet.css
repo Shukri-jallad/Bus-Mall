@@ -4,10 +4,10 @@
 
 h2{
     text-align: center;
-    color: chocolate;
+    color: cadetblue;
 }
 body{
-    background-color: beige;
+    background-color: whitesmoke;
 }
 
 
@@ -26,14 +26,14 @@ img{
 }
 ul{
     width: 80%;
-    background-color: cornsilk;
+    background-color: black;
 }
 
 li{
     font-size: 30px;
     font-weight: bold;
     list-style: none;
-    color: cornflowerblue;
+    color: white;
 }
 
 
