@@ -4,6 +4,7 @@ let firstImageElement = document.getElementById('first-image');
 let secondImageElement = document.getElementById('second-image');
 let thirdImageElement = document.getElementById('third-image');
 let button = document.getElementById('button');
+let nav = document.getElementById('sec-two')
 
 
 let counts = 0;
@@ -21,12 +22,14 @@ function BusMall(name,source){
   this.source = source;
   this.votes = 0;
   this.dispCh=0;
-  BusMall.allImages.push(this);
   arrOfnames.push(this.name);
+  BusMall.allImages.push(this);
+  saveToLs();
 }
 
 
 BusMall.allImages =[];
+console.log(BusMall.allImages);
 
 console.log(BusMall.allImages);
 
@@ -59,7 +62,7 @@ function renderThreeImages(){
   secondIndex = genrateRandomIndex();
   thirdIndex = genrateRandomIndex();  
  
-  while(firstIndex === secondIndex || firstIndex === thirdIndex || secondIndex === thirdIndex || previouslyShown.includes(firstIndex) || previouslyShown.includes(secondIndex) || previouslyShown.includes(thirdIndex)){
+  while(firstIndex === secondIndex || firstIndex === thirdIndex || secondIndex === thirdIndex || secondIndex === thirdIndex || previouslyShown.includes(firstIndex) || previouslyShown.includes(secondIndex) || previouslyShown.includes(thirdIndex)){
     firstIndex = genrateRandomIndex();
     secondIndex = genrateRandomIndex();
     thirdIndex = genrateRandomIndex();
@@ -84,7 +87,8 @@ secondImageElement.addEventListener('click',handleClicking);
 thirdImageElement.addEventListener('click' ,handleClicking);
 
 function handleClicking(event){
- 
+    event.preventDefault();
+
     counts++; 
     if(maxAttempts >= counts){
       if(event.target.id ==='first-image'){
@@ -104,8 +108,42 @@ function handleClicking(event){
   }
 }
 
-button.addEventListener('click',function(){
-    let ul = document.getElementById('unList');
+function saveToLs(){
+    let arrStr = JSON.stringify(BusMall.allImages);
+    localStorage.setItem('voteSaved', arrStr);
+    console.log(arrStr);
+  }
+
+  function gettingOrderFromLs(){
+    let data = localStorage.getItem('voteSaved');
+    console.log(data);
+    let order = JSON.parse(data);
+    console.log(order);
+    if(order !== null){
+      BusMall.allImages = order;
+    }
+    
+      renderOrders();
+      chart();
+  }
+
+  gettingOrderFromLs();
+
+button.addEventListener('click',renderOrders);
+
+
+
+function renderOrders(){
+    
+    if(nav !== null){
+    nav.removeChild(nav.firstElementChild);
+    }
+
+    let ul = document.createElement('ul');
+    nav.appendChild(ul);
+
+    
+    
     for(let i = 0 ; i < BusMall.allImages.length;i++){
       let li = document.createElement('li');
       ul.appendChild(li);
@@ -113,14 +151,17 @@ button.addEventListener('click',function(){
       arrOfShown.push(BusMall.allImages[i].dispCh);
       li.textContent = `${BusMall.allImages[i].name} it has ${BusMall.allImages[i].votes} Votes, was displayed ${BusMall.allImages[i].dispCh} times`;
     }
-    chart();
+    
 
-});
+}
 
 function genrateRandomIndex(){
    return Math.floor(Math.random() * BusMall.allImages.length); 
                   
 }
+
+
+
 function chart(){
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
@@ -165,3 +206,4 @@ var myChart = new Chart(ctx, {
     }
 });
 }
+
